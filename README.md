@@ -42,7 +42,7 @@ Use Python and SQLAlchemy to do a basic climate analysis and data exploration of
      - Query the previous 12 months of TOBS data for that station.
      - Plot the results as a histogram with `bins=12`, as the following image shows:
 
-       ![image](https://github.com/user-attachments/assets/2ebd30d8-a9a7-4083-a24b-8f1ad71e567a)
+![image](https://github.com/user-attachments/assets/2ebd30d8-a9a7-4083-a24b-8f1ad71e567a)
 
 4. Close your session.
 
