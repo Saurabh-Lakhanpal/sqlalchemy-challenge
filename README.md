@@ -1,7 +1,8 @@
 # sqlalchemy-challenge
 
 ## Solution
-- [climate_sqlalchemy](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/climate_sqlalchemy.ipynb)
+- [hawaii climate_sqlalchemy](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/climate_sqlalchemy.ipynb)
+- [hawaii climate app](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/app.py)
 - [Resources](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/tree/main/Resources)
 
 ## Instructions
