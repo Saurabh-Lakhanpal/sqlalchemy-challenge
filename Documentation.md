@@ -4,7 +4,7 @@
 This API provides access to climate data, including precipitation measurements, station data, and temperature statistics. The data is sourced from a SQLite database containing historical climate data for Hawaii.
 
 ## Base URL
-The base URL for all endpoints is: `http://<your-domain>/api/v1.0/`
+The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
 
 ## Endpoints
 
@@ -27,7 +27,7 @@ The base URL for all endpoints is: `http://<your-domain>/api/v1.0/`
   ```
 - **Example Usage:**
   ```bash
-  curl http://<your-domain>/api/v1.0/measurements
+  curl http://127.0.0.1:5000/api/v1.0/measurements
   ```
 
 ### 2. Get All Station Data
@@ -50,7 +50,7 @@ The base URL for all endpoints is: `http://<your-domain>/api/v1.0/`
   ```
 - **Example Usage:**
   ```bash
-  curl http://<your-domain>/api/v1.0/stations
+  curl http://127.0.0.1:5000/api/v1.0/stations
   ```
 
 ### 3. Get All Measurements with Station Data
@@ -75,7 +75,7 @@ The base URL for all endpoints is: `http://<your-domain>/api/v1.0/`
   ```
 - **Example Usage:**
   ```bash
-  curl http://<your-domain>/api/v1.0/measurements_Stations
+  curl http://127.0.0.1:5000/api/v1.0/measurements_Stations
   ```
 
 ### 4. Get Measurements with Station Data within a Date Range
@@ -103,7 +103,7 @@ The base URL for all endpoints is: `http://<your-domain>/api/v1.0/`
   ```
 - **Example Usage:**
   ```bash
-  curl http://<your-domain>/api/v1.0/measurements_StationsInRange/2010-01-01/2010-12-31
+  curl http://127.0.0.1:5000/api/v1.0/measurements_StationsInRange/2010-01-01/2010-12-31
   ```
 
 ### 5. Get Temperature Statistics for a Date Range
@@ -125,7 +125,7 @@ The base URL for all endpoints is: `http://<your-domain>/api/v1.0/`
   ```
 - **Example Usage:**
   ```bash
-  curl http://<your-domain>/api/v1.0/temp_stats/2010-01-01/2010-12-31
+  curl http://127.0.0.1:5000/api/v1.0/temp_stats/2010-01-01/2010-12-31
   ```
 
 ### 6. Get Temperature Statistics for a Specific Station within a Date Range
@@ -149,7 +149,7 @@ The base URL for all endpoints is: `http://<your-domain>/api/v1.0/`
   ```
 - **Example Usage:**
   ```bash
-  curl http://<your-domain>/api/v1.0/temp_stats_station/USC00519397/2010-01-01/2010-12-31
+  curl http://127.0.0.1:5000/api/v1.0/temp_stats_station/USC00519397/2010-01-01/2010-12-31
   ```
 
 ## Error Handling
