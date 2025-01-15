@@ -1,3 +1,4 @@
+# Import necessary modules
 from flask import Flask, jsonify, request
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import Session
@@ -45,20 +46,41 @@ def validate_station(station):
     session.close()
     return station_exists
 
+# Function to get date range from Measurement table
+def get_date_range():
+    session = Session(engine)
+    try:
+        start_date = session.query(func.min(Measurement.date)).scalar()
+        end_date = session.query(func.max(Measurement.date)).scalar()
+    except Exception as e:
+        return None, None
+    finally:
+        session.close()
+    return start_date, end_date
+
+# Check if date is within the allowed range
+def is_date_in_range(date_str):
+    start_date, end_date = get_date_range()
+    return start_date <= date_str <= end_date
+
 # Flask Routes
 @app.route("/")
 def welcome():
     """List all available API routes."""
+    start_date, end_date = get_date_range()
+    if not start_date or not end_date:
+        return jsonify({"error": "Unable to retrieve date range from database."}), 500
+
     return (
-        f"<h2>Available Routes on this Portal (Clickable links):</h2>"
-        f"<table border='1' style='width:80%; text-align:left;'>"
-        f"<tr><th>Description</br> (Data range 2010-01-01 to 2017-08-23)</th><th>Link</th></tr>"
+        f"<h2>Available Routes on this Portal:</h2>"
+        f"<table border='1' style='width:100%; text-align:left;'>"
+        f"<tr><th>Description (Dataset's Date range {start_date} to {end_date})</th><th>Clickable links</th></tr>"
         f"<tr><td>To Get all the precipitation measurements data</td><td><a href='/api/v1.0/measurements'>/api/v1.0/measurements</a></td></tr>"
         f"<tr><td>To Get all the station data</td><td><a href='/api/v1.0/stations'>/api/v1.0/stations</a></td></tr>"
         f"<tr><td>To Get all the measurements with stations data</td><td><a href='/api/v1.0/measurements_Stations'>/api/v1.0/measurements_Stations</a></td></tr>"
-        f"<tr><td>To Get all the measurements with stations data within a date range</td><td><a href='/api/v1.0/measurements_StationsInRange/2010-01-01/2017-08-23'>/api/v1.0/measurements_StationsInRange/2010-01-01/2017-08-23</a></td></tr>"        
-        f"<tr><td>To Get temperature statistics (min, avg, max) for a given date range</td><td><a href='/api/v1.0/temp_stats/2010-01-01/2017-08-23'>/api/v1.0/temp_stats/2010-01-01/2017-08-23</a></td></tr>"
-        f"<tr><td>To Get temperature statistics (min, avg, max) for a specific station within a date range</td><td><a href='/api/v1.0/temp_stats_station/USC00519397/2010-01-01/2017-08-23'>/api/v1.0/temp_stats_station/USC00519397/2010-01-01/2017-08-23</a></td></tr>"
+        f"<tr><td>To Get all the measurements with stations data within a date range</td><td><a href='/api/v1.0/measurements_StationsInRange/{start_date}/{end_date}'>/api/v1.0/measurements_StationsInRange/{start_date}/{end_date}</a></td></tr>"        
+        f"<tr><td>To Get temperature statistics (min, avg, max) for a given date range</td><td><a href='/api/v1.0/temp_stats/{start_date}/{end_date}'>/api/v1.0/temp_stats/{start_date}/{end_date}</a></td></tr>"
+        f"<tr><td>To Get temperature statistics (min, avg, max) for a specific station within a date range</td><td><a href='/api/v1.0/temp_stats_station/USC00519397/{start_date}/{end_date}'>/api/v1.0/temp_stats_station/USC00519397/{start_date}/{end_date}</a></td></tr>"
         f"</table>"
     )
 
@@ -157,6 +179,8 @@ def get_measurements_by_stations():
 def get_measurements_by_stations_in_range(start_date, end_date):
     if not validate_date(start_date) or not validate_date(end_date):
         return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
+    if not is_date_in_range(start_date) or not is_date_in_range(end_date):
+        return jsonify({"error": "Dates out of range. Please use dates within the dataset's range."}), 400
 
     session = Session(engine)
     try:
@@ -200,6 +224,8 @@ def get_measurements_by_stations_in_range(start_date, end_date):
 def temp_stats(start, end):
     if not validate_date(start) or not validate_date(end):
         return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
+    if not is_date_in_range(start) or not is_date_in_range(end):
+        return jsonify({"error": "Dates out of range. Please use dates within the dataset's range."}), 400
 
     session = Session(engine)
     try:
@@ -232,6 +258,8 @@ def temp_stats_station(station, start, end):
         return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
     if not validate_station(station):
         return jsonify({"error": "Invalid station ID."}), 400
+    if not is_date_in_range(start) or not is_date_in_range(end):
+        return jsonify({"error": "Dates out of range. Please use dates within the dataset's range."}), 400
 
     session = Session(engine)
     try:
