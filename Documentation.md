@@ -1,18 +1,22 @@
 # API Documentation
 
 ## Overview
+
 This API provides access to climate data, including precipitation measurements, station data, and temperature statistics. The data is sourced from a SQLite database containing historical climate data for Hawaii.
 
 ## Base URL
+
 The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
 
 ## Endpoints
 
 ### 1. Get All Precipitation Measurements
+
 - **Endpoint:** `/measurements`
 - **Method:** `GET`
 - **Description:** Retrieves all precipitation measurements data.
 - **Response:**
+
   ```json
   [
     {
@@ -25,16 +29,20 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
     ...
   ]
   ```
+
 - **Example Usage:**
+
   ```bash
-  curl http://127.0.0.1:5000/api/v1.0/measurements
+  http://127.0.0.1:5000/api/v1.0/measurements
   ```
 
 ### 2. Get All Station Data
+
 - **Endpoint:** `/stations`
 - **Method:** `GET`
 - **Description:** Retrieves all station data.
 - **Response:**
+
   ```json
   [
     {
@@ -48,16 +56,20 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
     ...
   ]
   ```
+
 - **Example Usage:**
+
   ```bash
-  curl http://127.0.0.1:5000/api/v1.0/stations
+  http://127.0.0.1:5000/api/v1.0/stations
   ```
 
 ### 3. Get All Measurements with Station Data
+
 - **Endpoint:** `/measurements_Stations`
 - **Method:** `GET`
 - **Description:** Retrieves all measurements data along with station information.
 - **Response:**
+
   ```json
   [
     {
@@ -73,12 +85,15 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
     ...
   ]
   ```
+
 - **Example Usage:**
+
   ```bash
-  curl http://127.0.0.1:5000/api/v1.0/measurements_Stations
+  http://127.0.0.1:5000/api/v1.0/measurements_Stations
   ```
 
 ### 4. Get Measurements with Station Data within a Date Range
+
 - **Endpoint:** `/measurements_StationsInRange/<start_date>/<end_date>`
 - **Method:** `GET`
 - **Description:** Retrieves measurements data along with station information within a specified date range.
@@ -86,6 +101,7 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
   - `start_date` (string): Start date in `YYYY-MM-DD` format.
   - `end_date` (string): End date in `YYYY-MM-DD` format.
 - **Response:**
+
   ```json
   [
     {
@@ -101,12 +117,15 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
     ...
   ]
   ```
+
 - **Example Usage:**
+
   ```bash
-  curl http://127.0.0.1:5000/api/v1.0/measurements_StationsInRange/2010-01-01/2010-12-31
+  http://127.0.0.1:5000/api/v1.0/measurements_StationsInRange/2010-01-01/2010-12-31
   ```
 
 ### 5. Get Temperature Statistics for a Date Range
+
 - **Endpoint:** `/temp_stats/<start>/<end>`
 - **Method:** `GET`
 - **Description:** Retrieves temperature statistics (min, avg, max) for a specified date range.
@@ -114,6 +133,7 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
   - `start` (string): Start date in `YYYY-MM-DD` format.
   - `end` (string): End date in `YYYY-MM-DD` format.
 - **Response:**
+
   ```json
   {
     "Start Date": "2010-01-01",
@@ -123,12 +143,15 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
     "Maximum recorded Temperature": 87
   }
   ```
+
 - **Example Usage:**
+
   ```bash
-  curl http://127.0.0.1:5000/api/v1.0/temp_stats/2010-01-01/2010-12-31
+  http://127.0.0.1:5000/api/v1.0/temp_stats/2010-01-01/2010-12-31
   ```
 
 ### 6. Get Temperature Statistics for a Specific Station within a Date Range
+
 - **Endpoint:** `/temp_stats_station/<station>/<start>/<end>`
 - **Method:** `GET`
 - **Description:** Retrieves temperature statistics (min, avg, max) for a specific station within a specified date range.
@@ -137,6 +160,7 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
   - `start` (string): Start date in `YYYY-MM-DD` format.
   - `end` (string): End date in `YYYY-MM-DD` format.
 - **Response:**
+
   ```json
   {
     "Station": "USC00519397",
@@ -147,19 +171,32 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
     "Maximum recorded Temperature": 87
   }
   ```
+
 - **Example Usage:**
+
   ```bash
-  curl http://127.0.0.1:5000/api/v1.0/temp_stats_station/USC00519397/2010-01-01/2010-12-31
+  http://127.0.0.1:5000/api/v1.0/temp_stats_station/USC00519397/2010-01-01/2010-12-31
   ```
 
 ## Error Handling
+
 The API returns the following error codes:
 
 - **400 Bad Request:** Invalid input or date out of range.
+  - **Message:** "Invalid date format. Please use YYYY-MM-DD."
+  - **Message:** "Dates out of range. Please use dates within the dataset's range."
+  - **Message:** "Invalid station ID."
+
 - **404 Not Found:** Resource not found.
+  - **Message:** "Not Found"
+
 - **500 Internal Server Error:** An error occurred on the server.
+  - **Message:** "Internal Server Error"
+  - **Message:** "Unable to retrieve date range from database."
 
 ## Notes
+
 - Ensure that the date format is `YYYY-MM-DD`.
 - The date range should be within the dataset's range.
+
 ```

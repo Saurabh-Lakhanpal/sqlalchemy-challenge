@@ -82,6 +82,7 @@ def welcome():
         f"<tr><td>To Get temperature statistics (min, avg, max) for a given date range</td><td><a href='/api/v1.0/temp_stats/{start_date}/{end_date}'>/api/v1.0/temp_stats/{start_date}/{end_date}</a></td></tr>"
         f"<tr><td>To Get temperature statistics (min, avg, max) for a specific station within a date range</td><td><a href='/api/v1.0/temp_stats_station/USC00519397/{start_date}/{end_date}'>/api/v1.0/temp_stats_station/USC00519397/{start_date}/{end_date}</a></td></tr>"
         f"</table>"
+        f"<p>For detailed API documentation, visit the <a href='https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/Documentation.md'>Documentation Page</a>.</p>"
     )
 
 @app.route("/api/v1.0/measurements")
