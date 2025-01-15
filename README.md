@@ -4,7 +4,7 @@
 - [hawaii climate_sqlalchemy](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/climate_sqlalchemy.ipynb)
 - [hawaii climate app](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/app.py)
 
-![sql-alchemy](https://github.com/user-attachments/assets/2b517f9e-ad76-4c66-9a86-4461922db7f5)
+![sql-alchemy](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/sql-alchemy.gif)
 
 ## Instructions
 
