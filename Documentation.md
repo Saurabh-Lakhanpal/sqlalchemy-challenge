@@ -3,9 +3,6 @@
 ## Overview
 This API provides access to climate data, including precipitation measurements, station data, and temperature statistics. The data is sourced from a SQLite database containing historical climate data for Hawaii.
 
-## Base URL
-The base URL for all endpoints is: `http://<your-domain>/api/v1.0/`
-
 ## Endpoints
 
 ### 1. Get All Precipitation Measurements
