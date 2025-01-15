@@ -51,7 +51,7 @@ def welcome():
     """List all available API routes."""
     return (
         f"<h2>Available Routes on this Portal (Clickable links):</h2>"
-        f"<table border='1' style='width:50%; text-align:left;'>"
+        f"<table border='1' style='width:80%; text-align:left;'>"
         f"<tr><th>Description</br> (Data range 2010-01-01 to 2017-08-23)</th><th>Link</th></tr>"
         f"<tr><td>To Get all the precipitation measurements data</td><td><a href='/api/v1.0/measurements'>/api/v1.0/measurements</a></td></tr>"
         f"<tr><td>To Get all the station data</td><td><a href='/api/v1.0/stations'>/api/v1.0/stations</a></td></tr>"
