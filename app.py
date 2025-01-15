@@ -6,6 +6,7 @@ import datetime as dt
 import pandas as pd
 from collections import OrderedDict #to maintain the order in json returns
 import json
+import re
 
 # Database Setup
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
@@ -29,6 +30,20 @@ def not_found(error):
 @app.errorhandler(500)
 def internal_server_error(error):
     return jsonify({"error": "Internal Server Error", "message": str(error)}), 500
+
+# Input Validation Functions
+def validate_date(date_text):
+    try:
+        dt.datetime.strptime(date_text, '%Y-%m-%d')
+        return True
+    except ValueError:
+        return False
+
+def validate_station(station):
+    session = Session(engine)
+    station_exists = session.query(Station).filter(Station.station == station).first() is not None
+    session.close()
+    return station_exists
 
 # Flask Routes
 @app.route("/")
@@ -140,6 +155,9 @@ def get_measurements_by_stations():
 
 @app.route("/api/v1.0/measurements_StationsInRange/<start_date>/<end_date>")
 def get_measurements_by_stations_in_range(start_date, end_date):
+    if not validate_date(start_date) or not validate_date(end_date):
+        return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
+
     session = Session(engine)
     try:
         results = session.query(
@@ -180,6 +198,9 @@ def get_measurements_by_stations_in_range(start_date, end_date):
 
 @app.route("/api/v1.0/temp_stats/<start>/<end>")
 def temp_stats(start, end):
+    if not validate_date(start) or not validate_date(end):
+        return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
+
     session = Session(engine)
     try:
         results = session.query(
@@ -207,6 +228,11 @@ def temp_stats(start, end):
 
 @app.route("/api/v1.0/temp_stats_station/<station>/<start>/<end>")
 def temp_stats_station(station, start, end):
+    if not validate_date(start) or not validate_date(end):
+        return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
+    if not validate_station(station):
+        return jsonify({"error": "Invalid station ID."}), 400
+
     session = Session(engine)
     try:
         results = session.query(
