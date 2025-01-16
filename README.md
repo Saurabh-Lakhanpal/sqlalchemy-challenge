@@ -4,8 +4,6 @@
 - [hawaii climate_sqlalchemy](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/climate_sqlalchemy.ipynb)
 - [hawaii climate app](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/app.py)
 
-![sql-alchemy](https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/sql-alchemy.gif)
-
 ## Instructions
 
 Perform a climate analysis to help with trip planning for a long holiday vacation in Honolulu, Hawaii.
