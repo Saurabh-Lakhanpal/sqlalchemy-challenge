@@ -79,11 +79,14 @@ def welcome():
         f"<tr><td>To Get all the station data</td><td><a href='/api/v1.0/stations'>/api/v1.0/stations</a></td></tr>"
         f"<tr><td>To Get all the measurements with stations data</td><td><a href='/api/v1.0/measurements_Stations'>/api/v1.0/measurements_Stations</a></td></tr>"
         f"<tr><td>To Get all the measurements with stations data within a date range</td><td><a href='/api/v1.0/measurements_StationsInRange/{start_date}/{end_date}'>/api/v1.0/measurements_StationsInRange/{start_date}/{end_date}</a></td></tr>"        
+        f"<tr><td>To Get temperature observations of the most-active station for the previous year</td><td><a href='/api/v1.0/tobs'>/api/v1.0/tobs</a></td></tr>"
+        f"<tr><td>To Get temperature statistics (min, avg, max) for a specified start date</td><td><a href='/api/v1.0/{start_date}'>/api/v1.0/{start_date}</a></td></tr>"
         f"<tr><td>To Get temperature statistics (min, avg, max) for a given date range</td><td><a href='/api/v1.0/temp_stats/{start_date}/{end_date}'>/api/v1.0/temp_stats/{start_date}/{end_date}</a></td></tr>"
         f"<tr><td>To Get temperature statistics (min, avg, max) for a specific station within a date range</td><td><a href='/api/v1.0/temp_stats_station/USC00519397/{start_date}/{end_date}'>/api/v1.0/temp_stats_station/USC00519397/{start_date}/{end_date}</a></td></tr>"
         f"</table>"
         f"<p>For detailed API documentation, visit the <a href='https://github.com/Saurabh-Lakhanpal/sqlalchemy-challenge/blob/main/Documentation.md'>Documentation Page</a>.</p>"
     )
+
 
 @app.route("/api/v1.0/measurements")
 def get_measurements():
@@ -175,6 +178,39 @@ def get_measurements_by_stations():
         response=json.dumps(joined_data, sort_keys=False),
         mimetype='application/json'
     )
+    
+@app.route("/api/v1.0/tobs")
+def get_tobs():
+    # Get the most active station
+    session = Session(engine)
+    most_active_station = session.query(Measurement.station).\
+        group_by(Measurement.station).\
+        order_by(func.count(Measurement.station).desc()).first()[0]
+
+    # Calculate the date one year ago from the last data point in the database
+    last_date = session.query(func.max(Measurement.date)).scalar()
+    one_year_ago = dt.datetime.strptime(last_date, '%Y-%m-%d') - dt.timedelta(days=365)
+
+    # Query the dates and temperature observations of the most-active station for the previous year of data
+    results = session.query(Measurement.date, Measurement.tobs).\
+        filter(Measurement.station == most_active_station).\
+        filter(Measurement.date >= one_year_ago).all()
+    session.close()
+
+    # Create a list of temperature observations for the previous year
+    tobs_list = []
+    for date, tobs in results:
+        tobs_dict = OrderedDict({
+            "date": date,
+            "tobs": tobs
+        })
+        tobs_list.append(tobs_dict)
+
+    return app.response_class(
+        response=json.dumps(tobs_list, sort_keys=False),
+        mimetype='application/json'
+    )
+   
 
 @app.route("/api/v1.0/measurements_StationsInRange/<start_date>/<end_date>")
 def get_measurements_by_stations_in_range(start_date, end_date):
@@ -220,6 +256,38 @@ def get_measurements_by_stations_in_range(start_date, end_date):
         response=json.dumps(joined_data, sort_keys=False),
         mimetype='application/json'
     )
+    
+@app.route("/api/v1.0/<start>")
+def temp_stats_start(start):
+    if not validate_date(start):
+        return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
+    if not is_date_in_range(start):
+        return jsonify({"error": "Date out of range. Please use a date within the dataset's range."}), 400
+
+    session = Session(engine)
+    try:
+        results = session.query(
+            func.min(Measurement.tobs).label("TMIN"),
+            func.avg(Measurement.tobs).label("TAVG"),
+            func.max(Measurement.tobs).label("TMAX")
+        ).filter(Measurement.date >= start).all()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        session.close()
+
+    tmin, tavg, tmax = results[0]
+
+    return app.response_class(
+        response=json.dumps(OrderedDict({
+            "Start Date": start,
+            "Minimum recorded Temperature": tmin,
+            "Average recorded Temperature": tavg,
+            "Maximum recorded Temperature": tmax
+        }), sort_keys=False),
+        mimetype='application/json'
+    )
+
 
 @app.route("/api/v1.0/temp_stats/<start>/<end>")
 def temp_stats(start, end):

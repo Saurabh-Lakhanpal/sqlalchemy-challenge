@@ -1,3 +1,5 @@
+Sure! Here's the updated documentation with the new routes added:
+
 # API Documentation
 
 ## Overview
@@ -178,6 +180,53 @@ The base URL for all endpoints is: `http://127.0.0.1:5000/api/v1.0/`
   http://127.0.0.1:5000/api/v1.0/temp_stats_station/USC00519397/2010-01-01/2010-12-31
   ```
 
+### 7. Get Temperature Observations of the Most-Active Station for the Previous Year
+
+- **Endpoint:** `/tobs`
+- **Method:** `GET`
+- **Description:** Retrieves temperature observations of the most-active station for the previous year of data.
+- **Response:**
+
+  ```json
+  [
+    {
+      "date": "2016-08-23",
+      "tobs": 77
+    },
+    ...
+  ]
+  ```
+
+- **Example Usage:**
+
+  ```bash
+  http://127.0.0.1:5000/api/v1.0/tobs
+  ```
+
+### 8. Get Temperature Statistics for a Specified Start Date
+
+- **Endpoint:** `/2010-01-01`
+- **Method:** `GET`
+- **Description:** Retrieves temperature statistics (min, avg, max) for a specified start date.
+- **URL Parameters:**
+  - `start` (string): Start date in `YYYY-MM-DD` format.
+- **Response:**
+
+  ```json
+  {
+    "Start Date": "2010-01-01",
+    "Minimum recorded Temperature": 56,
+    "Average recorded Temperature": 74.5,
+    "Maximum recorded Temperature": 87
+  }
+  ```
+
+- **Example Usage:**
+
+  ```bash
+  http://127.0.0.1:5000/api/v1.0/2010-01-01
+  ```
+
 ## Error Handling
 
 The API returns the following error codes:
@@ -199,4 +248,3 @@ The API returns the following error codes:
 - Ensure that the date format is `YYYY-MM-DD`.
 - The date range should be within the dataset's range.
 
-```
